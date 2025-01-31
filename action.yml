@@ -1,0 +1,40 @@
+name: "Generate test report to github page"
+description: "Generate test report to github page"
+inputs:
+  report_name:
+    description: "Name of the report"
+    required: true
+  report_directory_name:
+    description: "Name of the report directory that will be generated in the github page"
+    required: true
+  commit_sha:
+    description: "Commit SHA"
+    required: true
+    default: ${{ github.sha }}
+  run_number:
+    description: "Run number"
+    required: true
+    default: ${{ github.run_number }}
+  gh_page_path:
+    description: "Directory path to of github page where report will be generated to"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Generate Test
+      shell: bash
+      env:
+        REPORT_NAME: ${{ inputs.report_name }}
+        REPORT_DIRECTORY_NAME: ${{ inputs.report_directory_name }}
+        COMMIT_SHA: ${{ inputs.commit_sha }}
+        RUN_NUMBER: ${{ inputs.run_number }}
+        GH_PAGE_PATH: ${{ inputs.gh_page_path }}
+        ACTION_PATH: ${{ github.action_path }}
+      run: |
+        python3 ${{ github.action_path }}/scripts/generate_report.py
+        python3 ${{ github.action_path }}/scripts/generate_manifest.py
