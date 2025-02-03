@@ -51,7 +51,7 @@ def generate_report():
         "commit_sha": COMMIT_SHA,
         "run_number": RUN_NUMBER,
         "timestamp": datetime.now(timezone.utc).strftime('%Y%m%d-%H%M%S'),
-        "dirName": REPORT_DIRECTORY_NAME,
+        "dir_name": REPORT_DIRECTORY_NAME,
         "reports": list(test_report_paths.keys())
     }
 

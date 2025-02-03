@@ -15,13 +15,14 @@
 <body>
     <h1>Test Results</h1>
     
-    <input type="text" id="prFilter" class="filter" placeholder="Filter by PR number...">
+    <input type="text" id="nameFilter" class="filter" placeholder="Filter by Name...">
     
     <table id="resultsTable">
         <thead>
             <tr>
-                <th data-sort-key="prNumber" onclick="sortTable('prNumber')">PR Number</th>
+                <th>Name</th>
                 <th data-sort-key="timestamp" onclick="sortTable('timestamp')">Timestamp</th>
+                <th>Run number</th>
                 <th>Commit SHA</th>
                 <th>Reports</th>
             </tr>
@@ -48,12 +49,13 @@
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = results.map(result => `
                 <tr>
-                    <td>#${result.prNumber}</td>
+                    <td>#${result.name}</td>
                     <td>${formatTimestamp(result.timestamp)}</td>
-                    <td>${result.commitSha}</td>
+                    <td>${result.run_number}</td>
+                    <td>${result.commit_sha.substring(0, 8)}</td>
                     <td>
                         ${result.reports.map(report => 
-                            `<a href="./${result.dirName}/${report}/index.html">
+                            `<a href="./${result.dir_name}/${report}/index.html">
                                 ${report.charAt(0).toUpperCase() + report.slice(1)}
                             </a>`
                         ).join(' | ')}
@@ -79,10 +81,10 @@
 
         // Filter functionality
         function setupFilter() {
-            document.getElementById('prFilter').addEventListener('input', (e) => {
+            document.getElementById('nameFilter').addEventListener('input', (e) => {
                 const searchTerm = e.target.value.toLowerCase();
                 const filtered = allResults.filter(result => 
-                    result.prNumber.toString().includes(searchTerm)
+                    result.name.toString().includes(searchTerm)
                 );
                 renderTable(filtered);
             });
