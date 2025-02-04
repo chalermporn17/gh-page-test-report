@@ -1,0 +1,67 @@
+name: Generate report
+
+on:
+  push:
+    branches: ["main", "dev"]
+
+# Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+concurrency:
+  group: "pages"
+
+jobs:
+  # Single deploy job since we're just deploying
+  test-and-generate-report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 #v4.2.2
+
+      - name: Get github pages
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 #v4.2.2
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Create metadata
+        id: metadata
+        run: |
+          export BRANCH_NAME=${GITHUB_REF##*/}
+          export REPORT_PREFIX="${BRANCH_NAME}-report"
+          TZ=UTC export REPORT_NAME=${REPORT_PREFIX}-$(date +"%Y%m%d-%H%M%S")-$(printf "%09d" ${{ github.run_number }})
+          echo "report_name=$REPORT_NAME" >> $GITHUB_OUTPUT
+
+      - name: Create report
+        run: |
+          mkdir -p coverage
+          echo "This is coverage report" > coverage/index.html
+          mkdir -p test-report
+          echo "This is test report" > test-report/index.html
+
+      - name: Create report for github pages
+        uses: ./
+        with:
+          report_name: ${{ steps.metadata.outputs.report_name }}
+          report_directory_name: ${{ steps.metadata.outputs.report_name }}
+          gh_page_path: gh-pages
+        env:
+          TEST_REPORT_COVERAG_PATH: coverage
+          TEST_REPORT_TEST_PATH: test-report
+
+      - name: Copy report to github pages branch
+        run: |
+          cd gh-pages
+          git config --global user.email "bot@github.com"
+          git config --global user.name "GitHub Actions"
+          git add .
+          git commit -m "Report for ${{ github.sha }}"
+          git push
