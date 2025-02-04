@@ -11,6 +11,17 @@
         ]
     },
     {
+        "name": "main-report-20250204-055802-000000004",
+        "commit_sha": "88845038d81d3498fac9d012aaeb2bb344e597a7",
+        "run_number": "4",
+        "timestamp": "20250204-055804",
+        "dir_name": "main-report-20250204-055802-000000004",
+        "reports": [
+            "coverage",
+            "test"
+        ]
+    },
+    {
         "name": "dev-report-20250204-051900-000000003",
         "commit_sha": "88845038d81d3498fac9d012aaeb2bb344e597a7",
         "run_number": "3",
