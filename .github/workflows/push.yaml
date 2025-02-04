@@ -54,7 +54,7 @@ jobs:
           report_directory_name: ${{ steps.metadata.outputs.report_name }}
           gh_page_path: gh-pages
         env:
-          TEST_REPORT_COVERAG_PATH: coverage
+          TEST_REPORT_COVERAGE_PATH: coverage
           TEST_REPORT_TEST_PATH: test-report
 
       - name: Copy report to github pages branch
