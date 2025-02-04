@@ -39,7 +39,14 @@
             .then(response => response.json())
             .then(data => {
                 allResults = data;
-                renderTable(data);
+                // Apply initial sort by timestamp descending
+                allResults.sort((a, b) => {
+                    const key = currentSort.key;
+                    if (a[key] < b[key]) return currentSort.asc ? -1 : 1;
+                    if (a[key] > b[key]) return currentSort.asc ? 1 : -1;
+                    return 0;
+                });
+                renderTable(allResults);
                 updateSortIndicators();
                 setupFilter();
             });
